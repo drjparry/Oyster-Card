@@ -1,25 +1,26 @@
 class OysterCard
   LIMIT = 50
   MINIMUM = 1
-attr_reader :balance
+attr_reader :balance, :entry_station
   def initialize
     @balance = 0
     @journey = false
+    @entry_station = nil
   end
   def top_up(value)
     fail "Max reached which is #{LIMIT}" if maximum(value)
     @balance += value
   end
   def in_journey?
-    @journey
+    entry_station
   end
-  def touch_in
+  def touch_in(station)
     fail "Insufficient balance #{MINIMUM}" if minimum
-    @journey = true
+    @entry_station = station
   end
   def touch_out
     deduct(10)
-    @journey = false
+    @entry_station = nil
   end
   private
   def maximum(value)

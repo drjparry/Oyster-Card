@@ -11,36 +11,54 @@ describe OysterCard do
     end
     it "gets topped up "do
     expect(subject.balance).to eq 30
-    end
-    it "fails for a top-up more than 50" do
-      subject.top_up(20)
-      expect{subject.top_up(1)}.to raise_error "Max reached which is #{OysterCard::LIMIT}"
-    end
-    # it 'gets deducted' do
-    #   subject.deduct(10)
-    #   expect(subject.balance).to eq 20
-    # end
+  end
+  it "fails for a top-up more than 50" do
+    subject.top_up(20)
+    expect{subject.top_up(1)}.to raise_error "Max reached which is #{OysterCard::LIMIT}"
+  end
+end
+
+describe 'journey' do
+  before do
+    subject.top_up(10)
   end
 
-  describe 'journey' do
-    it 'journey commences' do
-      expect(subject).to_not be_in_journey
+  let(:station) {double(:station)}
+  it 'journey commences' do
+    expect(subject).to_not be_in_journey
+  end
+  context 'touch_in' do
+    # before do
+    #   subject.top_up(10)
+    # end
+    it 'card has at least £1' do
+      subject.touch_out
+      expect{subject.touch_in(station)}.to raise_error "Insufficient balance #{OysterCard::MINIMUM}"
     end
     it 'taps-in' do
-      subject.top_up(10)
-      subject.touch_in
+      subject.touch_in(station)
       expect(subject).to be_in_journey
     end
+    it 'has entry station' do
+      subject.touch_in(station)
+      expect(subject.entry_station).to eq station
+  end
+  end
+  context 'touch_out' do
 
     it 'taps-out' do
       subject.touch_out
       expect(subject).to_not be_in_journey
     end
-    it 'card has at least £1' do
-      expect{subject.touch_in}.to raise_error "Insufficient balance #{OysterCard::MINIMUM}"
-    end
     it 'charges on touch_out' do
       expect{subject.touch_out}.to change{subject.balance}.by(-10)
+
+    end
+    it 'forgets entry station' do
+      subject.touch_in(station)
+      subject.touch_out
+      expect(subject.entry_station).to eq nil
     end
   end
+end
 end
