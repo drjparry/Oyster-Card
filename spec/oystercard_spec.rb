@@ -28,11 +28,8 @@ describe 'journey' do
     expect(subject).to_not be_in_journey
   end
   context 'touch_in' do
-    # before do
-    #   subject.top_up(10)
-    # end
     it 'card has at least £1' do
-      subject.touch_out
+      subject.touch_out(station)
       expect{subject.touch_in(station)}.to raise_error "Insufficient balance #{OysterCard::MINIMUM}"
     end
     it 'taps-in' do
@@ -47,18 +44,33 @@ describe 'journey' do
   context 'touch_out' do
 
     it 'taps-out' do
-      subject.touch_out
+      subject.touch_out(station)
       expect(subject).to_not be_in_journey
     end
     it 'charges on touch_out' do
-      expect{subject.touch_out}.to change{subject.balance}.by(-10)
+      expect{subject.touch_out(station)}.to change{subject.balance}.by(-10)
 
     end
     it 'forgets entry station' do
       subject.touch_in(station)
-      subject.touch_out
+      subject.touch_out(station)
       expect(subject.entry_station).to eq nil
     end
+
+    it 'remembers exit station' do
+      subject.touch_out(station)
+      expect(subject.exit_station).to eq station
+    end
+
+    it 'records journey history' do
+      subject.touch_in(station)
+      subject.touch_out(station)
+      expect(subject.journey_history).to eq [station,station]
+    end
+
+    # it 'records journey set' do
+    #   subject.journey_history
+    # end
   end
 end
 end
