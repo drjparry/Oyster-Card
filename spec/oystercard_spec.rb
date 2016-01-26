@@ -21,4 +21,19 @@ describe OysterCard do
       expect(subject.balance).to eq 20
     end
   end
+
+  describe 'journey' do
+    it 'journey commences' do
+      expect(subject).to_not be_in_journey
+    end
+    it 'taps-in' do
+      subject.touch_in
+      expect(subject).to be_in_journey
+    end
+
+    it 'taps-out' do
+      subject.touch_out
+      expect(subject).to_not be_in_journey
+    end
+  end
 end
