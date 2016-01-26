@@ -16,10 +16,10 @@ describe OysterCard do
       subject.top_up(20)
       expect{subject.top_up(1)}.to raise_error "Max reached which is #{OysterCard::LIMIT}"
     end
-    it 'gets deducted' do
-      subject.deduct(10)
-      expect(subject.balance).to eq 20
-    end
+    # it 'gets deducted' do
+    #   subject.deduct(10)
+    #   expect(subject.balance).to eq 20
+    # end
   end
 
   describe 'journey' do
@@ -27,6 +27,7 @@ describe OysterCard do
       expect(subject).to_not be_in_journey
     end
     it 'taps-in' do
+      subject.top_up(10)
       subject.touch_in
       expect(subject).to be_in_journey
     end
@@ -34,6 +35,12 @@ describe OysterCard do
     it 'taps-out' do
       subject.touch_out
       expect(subject).to_not be_in_journey
+    end
+    it 'card has at least £1' do
+      expect{subject.touch_in}.to raise_error "Insufficient balance #{OysterCard::MINIMUM}"
+    end
+    it 'charges on touch_out' do
+      expect{subject.touch_out}.to change{subject.balance}.by(-10)
     end
   end
 end
