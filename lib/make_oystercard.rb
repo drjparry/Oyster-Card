@@ -6,7 +6,9 @@ attr_reader :balance
   end
   def top_up(value)
     fail "Max reached which is #{LIMIT}" if @balance + value > LIMIT
-
     @balance += value
+  end
+  def deduct(value)
+    @balance -= value
   end
 end
