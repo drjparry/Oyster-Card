@@ -70,7 +70,7 @@ describe OysterCard do
 
         expect(oystercard.full_history).to eq ({oystercard.time=>[station, station]})
       end
-
+      
     end
   end
 end
