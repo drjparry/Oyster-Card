@@ -27,41 +27,46 @@ describe OysterCard do
       oystercard.top_up(10)
     end
 
-    it 'journey commences' do
-      expect(oystercard).to_not be_in_journey
-    end
+    # it 'journey commences' do
+    #   oystercard.touch_in(station)
+    #   expect(oystercard.in_journey?).to eq true
+    # end
 
     context 'touch_in' do
       it 'card has at least £1' do
+        oystercard.touch_in(station)
         oystercard.touch_out(station)
         expect{oystercard.touch_in(station)}.to raise_error "Insufficient balance #{OysterCard::MINIMUM}"
       end
 
-      it 'taps-in' do
-        oystercard.touch_in(station)
-        expect(oystercard).to be_in_journey
-      end
+      # it 'taps-in' do
+      #   oystercard.touch_in(station)
+      #   expect(oystercard).to be_in_journey
+      # end
 
       it 'has entry station' do
         oystercard.touch_in(station)
-        expect(oystercard.entry_station).to eq station
+        expect(oystercard.history).to eq [station]
       end
     end
 
     context 'touch_out' do
 
       it 'taps-out' do
+        oystercard.touch_in(station)
         oystercard.touch_out(station)
-        expect(oystercard).to_not be_in_journey
+        expect(oystercard.history).to eq [station, station]
       end
 
       it 'charges on touch_out' do
+        oystercard.touch_in(station)
         expect{oystercard.touch_out(station)}.to change{oystercard.balance}.by(-10)
       end
 
       it 'remembers exit station' do
+        oystercard.touch_in(station)
         oystercard.touch_out(station)
-        expect(oystercard.exit_station).to eq station
+        expect(oystercard.history).to eq [station, station]
       end
 
       it 'records journey history' do
@@ -70,7 +75,8 @@ describe OysterCard do
 
         expect(oystercard.full_history).to eq ({oystercard.time=>[station, station]})
       end
-      
+
+
     end
   end
 end
