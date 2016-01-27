@@ -53,12 +53,24 @@ describe Oystercard do
     expect(oystercard.entry_location).to eq nil
   end
 
-  it "sees all of the users previous trips" do 
+  it "sees all of the users previous trips" do
     oystercard.top_up(20)
     location1=Location.new
     location3 =Location.new
     oystercard.touch_in(location1)
     oystercard.touch_out(location3)
     expect(oystercard.history).to eq ({"journey"=>[location1, location3]})
+  end
+
+  #In order to know how far I have travelled
+  #As a customer
+  #I want to know what zone a station is in
+  it 'allows a user to know what station he\'s in' do
+    oystercard = Oystercard.new
+    Station = Struct.new :zone
+    station = Station.new(1)
+    oystercard.top_up(20)
+    oystercard.touch_in(station)
+    expect(oystercard.where).to eq 1
   end
 end

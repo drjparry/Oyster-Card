@@ -1,4 +1,5 @@
 require_relative 'location.rb'
+require_relative 'station.rb'
 
 class Oystercard
 
@@ -39,6 +40,10 @@ SINGLE_JOURNEY = 1
 
   def in_journey?
     !!entry_location
+  end
+
+  def where
+    station.zone
   end
 
 
