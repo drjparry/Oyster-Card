@@ -33,8 +33,7 @@ describe 'User stories' do
   it 'deducts a penalty charge if user fails to touch in or out' do
     oystercard.top_up(50)
     oystercard.touch_in(station)
-    message = "Penalty charge deducted: You forgot to touch out!"
-    expect{oystercard.touch_in(station)}.to raise_error message
+    expect {oystercard.touch_in(station)}.to change{oystercard.balance}.by(-6)
   end
 
   it 'checks whether a journey is complete' do
@@ -44,5 +43,7 @@ describe 'User stories' do
     oystercard.touch_in(station)
     expect(oystercard.touch_out(station)).to eq "journey complete"
   end
+
+
 
 end

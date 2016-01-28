@@ -3,31 +3,30 @@ require_relative 'journey.rb'
 class OysterCard
   LIMIT = 50
   MINIMUM = 1
-  attr_reader :balance, :exit_station, :history
+  attr_reader :balance
 
   def initialize
     @balance = 0
-    @history = []
     @full_history = {}
+    @history = []
+    @journey =  Journey.new
   end
 
 
   def top_up(value)
     fail "Max reached which is #{LIMIT}" if maximum(value)
     @balance += value
-
-
   end
 
 
   def touch_in(station)
     fail "Insufficient balance #{MINIMUM}" if minimum
-    @journey =  Journey.new station
+      if @history.length == 1
+        deduct(6)
+      end
+      @journey.entry_station = station
     record_the_journey(station)
     time
-
-    @journey_complete = false
-
   end
 
   def touch_out(station)
@@ -45,10 +44,13 @@ class OysterCard
   end
 
   def full_history
-    @full_history[@journey_time] = @history
+    @full_history[@journey_time] = @journey.history
     @full_history
   end
 
+  def history
+    @journey.history
+  end
 
   private
 
@@ -69,6 +71,3 @@ class OysterCard
   end
 end
 
-
-#journey = Journey.new
-#p journey.entry_station
