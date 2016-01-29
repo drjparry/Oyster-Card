@@ -16,9 +16,9 @@ class OysterCard
 	def initialize
 		@balance = 0
     @history = []
-    @entry_station = nil 
+    @entry_station = nil
 	end
-  
+
   def in_journey?
     !!@entry_station
   end
@@ -26,26 +26,25 @@ class OysterCard
 	def top_up(amount)
     fail "Does not accept negative amounts" if amount < 0
     fail "You have reached £#{MAX_AMOUNT}" if balance + amount > MAX_AMOUNT
-		@balance += amount	
+		@balance += amount
 	end
-	
-  
+
+
   def touch_in(station)
     fail "Insufficient balance - Minimum required: £#{MIN_AMOUNT}" if balance < MIN_AMOUNT
-    deduct(@journey.fare) if @entry_station 
+    deduct(@journey.fare) if @entry_station
     self.entry_station = station
     start_journey
   end
-  
+
   def touch_out(station)
-    
-    end_journey(station)
+     end_journey(station)
     deduct(@journey.fare)
     self.entry_station = nil
   end
-    
+
   private
-  
+
   attr_writer :balance, :entry_station, :history
 
   def deduct(amount)
