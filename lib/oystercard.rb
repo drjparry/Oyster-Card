@@ -1,5 +1,7 @@
 require_relative 'journey.rb'
 require_relative 'journeylog.rb'
+require_relative 'station.rb'
+
 class OysterCard
 
     MIN_BALANCE = 1
